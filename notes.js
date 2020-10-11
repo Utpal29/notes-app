@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const fs = require('fs');
 
 const getNotes = () => {
@@ -26,20 +27,38 @@ const addNotes = (title, body) => {
   });
 
   if (duplicateNotes.length === 0) {
+
     notes.push({
       title: title,
       body: body
     });
 
     saveNotes(notes);
-    console.log('Note added');
-  } else {
-    console.log('Note title taken!!!');
-  }
 
+    console.log(chalk.green.inverse('Note added'));
+  } else {
+    console.log(chalk.red.inverse('Note title taken!!!'));
+  }
+};
+
+const removeNote = title => {
+  const notes = loadNotes();
+
+  const newNotes = notes.filter(note => {
+    return note.title !== title;
+  });
+
+  if (newNotes.length === notes.length - 1) {
+    saveNotes(newNotes);
+
+    console.log(chalk.green.inverse(`note with title ${title} is removed`));
+  } else {
+    console.log(chalk.red.inverse('title doesn\'t exist'));
+  }
 };
 
 module.exports = {
   getNotes: getNotes,
-  addNotes: addNotes
+  addNotes: addNotes,
+  removeNote: removeNote
 }
